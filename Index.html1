@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html style="background:transparent;">
+<head>
+    <style>
+        body { background: transparent; color: white; font-family: 'Courier New', monospace; margin: 0; padding: 5px; overflow: hidden; }
+        .member { display: flex; align-items: center; justify-content: space-between; padding: 8px; margin-bottom: 4px; border: 1px solid #fff; background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .name { font-weight: bold; font-size: 13px; color: #fff; }
+        .tag { background: #fff; color: #000; font-size: 9px; padding: 2px 5px; font-weight: 900; }
+    </style>
+</head>
+<body>
+    <div id="list">INITIALIZING...</div>
+    <script>
+        async function getMembers() {
+            try {
+                const r = await fetch('https://api.chess.com/pub/club/chess-society/members');
+                const d = await r.json();
+                const latest = d.all.slice(-3).reverse();
+                const list = document.getElementById('list');
+                list.innerHTML = '';
+                latest.forEach(m => {
+                    list.innerHTML += `<div class="member"><span class="name">@${m.username}</span><span class="tag">NEW</span></div>`;
+                });
+            } catch (e) { document.getElementById('list').innerText = "CONNECTION_ERROR"; }
+        }
+        getMembers();
+        setInterval(getMembers, 60000);
+    </script>
+</body>
+</html>
